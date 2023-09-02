@@ -43,14 +43,8 @@
     function showNotification(data) {
         var ms = 30000; // close notification after 30sec
         var notification = new Notification('Hello', {
-                body: 'From: ' + data.from,
-                tag: channel,
-                icon: 'images/oi.png'
+                body: 'From: ' + data.from
             });
-        console.log('Show Notification')
-        notification.onshow = function() { 
-            setTimeout(notification.close, ms); 
-        };
     }
 
     async function connect(uuid) {
@@ -70,9 +64,11 @@
                     showNotification(payload.message);
                 }
             },
-            presence: payload =>
+            presence: async payload =>
             {
-                updateList(payload);
+                //  Not good practice, the presence callback will give you a delta of who has joined or left so you don't need to call hereNow every time!
+                var users = await hereNow();
+                updateList(users);
             }
         })
         
@@ -113,8 +109,6 @@
         {
             var u = m.channels[channel].occupants[i];
             var n = u.uuid;
-            console.log(u.uuid)
-            console.log(username)
             if(u.uuid === username) {
                 foundSelf = true;
                 n = u.uuid + ' (You)';
@@ -125,10 +119,6 @@
             str += '<li id="' + u.uuid + '">' + n + '</li>';
         }
         list.innerHTML = str;
-
-        if (!foundSelf) { // If the results doesn't include self, try again.
-            updateList();
-        }
     }
 
     function getUserInfo() {
