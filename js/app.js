@@ -47,6 +47,7 @@
                 tag: channel,
                 icon: 'images/oi.png'
             });
+        console.log('Show Notification')
         notification.onshow = function() { 
             setTimeout(notification.close, ms); 
         };
@@ -112,6 +113,8 @@
         {
             var u = m.channels[channel].occupants[i];
             var n = u.uuid;
+            console.log(u.uuid)
+            console.log(username)
             if(u.uuid === username) {
                 foundSelf = true;
                 n = u.uuid + ' (You)';
@@ -119,7 +122,7 @@
             if(u.uuid.length > 35) {
                 n = 'PubNub Admin';
             }
-            str += '<li id="' + u.uuid + '">' + u.uuid + '</li>';
+            str += '<li id="' + u.uuid + '">' + n + '</li>';
         }
         list.innerHTML = str;
 
